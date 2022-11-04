@@ -1,7 +1,7 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.5'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
 }
 
 group = 'at.wolf'
@@ -9,16 +9,30 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'com.google.code.gson:gson:2.10'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'com.google.code.gson:gson:2.10'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+task buildDocker() {
+    exec {
+        commandLine 'docker', 'build', '-t', 'mackesmilianmaddi/12factor', '.'
+    }
+}
+
+build.finalizedBy(buildDocker)
+
+task dockerRun() {
+    exec {
+        commandLine 'docker', 'run', '-p', '4076:4076', 'mackesmilianmaddi/12factor'
+    }
 }
