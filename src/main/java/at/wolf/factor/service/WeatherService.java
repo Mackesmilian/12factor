@@ -33,9 +33,11 @@ public class WeatherService {
                 .baseUrl(baseUrl)
                 .filter(logRequest())
                 .build();
-        int avgTempGraz = getAvgTemp(getWeatherGraz());
+        String graz = getWeatherGraz();
+        int avgTempGraz = getAvgTemp(graz);
         log.info("Temp Graz: {}", avgTempGraz);
-        int avgTempVienna = getAvgTemp(getWeatherVienna());
+        String vienna = getWeatherVienna();
+        int avgTempVienna = getAvgTemp(vienna);
         log.info("Temp Vienna: {}", avgTempVienna);
         return avgTempGraz < avgTempVienna ?
                 "It's gonna be warmer by " + (avgTempVienna - avgTempGraz) + " degrees"

@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'java'
+    id 'com.palantir.docker' version '0.22.1'
+    id "com.palantir.docker-run" version "0.22.1"
 }
 
 group = 'at.wolf'
@@ -23,16 +25,18 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-task buildDocker() {
-    exec {
-        commandLine 'docker', 'build', '-t', 'mackesmilianmaddi/12factor', '.'
-    }
+docker {
+    name "mackesmilianmaddi/12factor"
+    files 'build/libs/12factor-0.0.1-SNAPSHOT.jar'
 }
 
-build.finalizedBy(buildDocker)
+tasks["docker"].dependsOn(build)
 
-task dockerRun() {
-    exec {
-        commandLine 'docker', 'run', '-p', '4076:4076', 'mackesmilianmaddi/12factor'
-    }
+dockerRun {
+    name "12factor"
+    image "mackesmilianmaddi/12factor"
+    ports '4076:4076'
+    clean true
 }
+
+tasks["dockerRun"].dependsOn("docker")
